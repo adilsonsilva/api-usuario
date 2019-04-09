@@ -54,7 +54,6 @@ public class UsuarioController {
 		response.setData(usuarioCriado);
 		response.setMensagemSucesso("Dados cadastrados com sucesso");
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
-
 	}
 
 	@ApiOperation(value = "Deletar usuário")
@@ -102,7 +101,6 @@ public class UsuarioController {
 		response.setData(Boolean.TRUE);
 		response.setMensagemSucesso(String.format("Usuario %s ativado com sucesso", id));
 		return new ResponseEntity<>(response, HttpStatus.OK);
-
 	}
 
 	@ApiOperation(value = "Buscar usuário por Id")
@@ -118,7 +116,6 @@ public class UsuarioController {
 		response.setData(usuairo);
 		response.setMensagemSucesso("Busca realizada com sucesso");
 		return new ResponseEntity<>(response, HttpStatus.OK);
-
 	}
 
 	@ApiOperation(value = "Buscar todos os usuários")
@@ -131,7 +128,6 @@ public class UsuarioController {
 		response.setData(usuairos);
 		response.setMensagemSucesso("Busca realizada com sucesso");
 		return new ResponseEntity<>(response, HttpStatus.OK);
-
 	}
 
 }

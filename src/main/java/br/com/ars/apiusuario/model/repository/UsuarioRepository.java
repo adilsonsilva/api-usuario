@@ -15,5 +15,8 @@ public interface UsuarioRepository extends JpaRepository<UsuarioEntity, Integer>
 	@Modifying
 	@Query(value = "UPDATE UsuarioEntity u SET u.ativo =:ativo WHERE u.id =:id")
 	UsuarioEntity updateStatusUsuario(@Param(UsuarioEntity.ID) Integer id, @Param(UsuarioEntity.ATIVO) Boolean value);
+	
+	@Query(value="SELECT u FROM UsuarioEntity u WHERE u.email =:email")
+	UsuarioEntity findUsuarioPorEmail(@Param(UsuarioEntity.EMAIL) String email);
 
 }

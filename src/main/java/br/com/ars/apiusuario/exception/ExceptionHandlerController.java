@@ -13,17 +13,16 @@ import br.com.ars.apiusuario.responses.Response;
 
 @ControllerAdvice
 public class ExceptionHandlerController {
-	
-	@ExceptionHandler(InvalidFormatException.class)
-    public ResponseEntity<Response> resourceFormatoInvalido(InvalidFormatException ex) {
-	return new ResponseEntity<Response>(new Response(Constantes.MSG_VALIDACAO_FORMATO),
-		HttpStatus.BAD_REQUEST);
-    }
 
-    @ExceptionHandler(JsonParseException.class)
-    public ResponseEntity<Response> resourceNotFound(JsonParseException ex) {
-	return new ResponseEntity<Response>(new Response(Constantes.MSG_ERRO_CONVERSAO_DADOS_ENTRADA),
-		HttpStatus.BAD_REQUEST);
-    }
+	@ExceptionHandler(InvalidFormatException.class)
+	public ResponseEntity<Response> resourceFormatoInvalido(InvalidFormatException ex) {
+		return new ResponseEntity<Response>(new Response(Constantes.MSG_VALIDACAO_FORMATO), HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(JsonParseException.class)
+	public ResponseEntity<Response> resourceNotFound(JsonParseException ex) {
+		return new ResponseEntity<Response>(new Response(Constantes.MSG_ERRO_CONVERSAO_DADOS_ENTRADA),
+				HttpStatus.BAD_REQUEST);
+	}
 
 }

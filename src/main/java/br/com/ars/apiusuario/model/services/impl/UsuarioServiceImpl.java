@@ -13,9 +13,11 @@ import org.springframework.stereotype.Service;
 import br.com.ars.apiusuario.constantes.Constantes;
 import br.com.ars.apiusuario.controllers.UsuarioController;
 import br.com.ars.apiusuario.dto.UsuarioDTO;
+import br.com.ars.apiusuario.exception.UsuarioCadastradoException;
 import br.com.ars.apiusuario.exception.UsuarioCadastroException;
 import br.com.ars.apiusuario.exception.UsuarioDeleteException;
 import br.com.ars.apiusuario.exception.UsuarioNotFoundException;
+import br.com.ars.apiusuario.exception.UsuarioPadraoSenhaException;
 import br.com.ars.apiusuario.exception.UsuarioUpdateException;
 import br.com.ars.apiusuario.model.entitys.UsuarioEntity;
 import br.com.ars.apiusuario.model.repository.UsuarioRepository;
@@ -30,27 +32,33 @@ public class UsuarioServiceImpl implements UsuarioService {
 	UsuarioRepository usuarioRepository;
 
 	@Override
-	public UsuarioEntity cadastrarUsuario(UsuarioDTO usuarioDTO) throws UsuarioCadastroException {
+	public UsuarioEntity cadastrarUsuario(UsuarioDTO usuarioDTO) {
+
+		isUsuarioExistente(usuarioDTO.getEmail());
+		
+		// TO DO
+		criptografarSenha(usuarioDTO.getSenha());
+
 		try {
 			UsuarioEntity entidade = obterEntidadeUsuario(usuarioDTO);
 			usuarioRepository.save(entidade);
 			return entidade;
 		} catch (Exception e) {
-			String msg = String.format(Constantes.MSG_ERRO_CADASTRAR_USUARIO, usuarioDTO.getEmail());			
+			String msg = String.format(Constantes.MSG_ERRO_CADASTRAR_USUARIO, usuarioDTO.getEmail());
 			logger.error(msg, e);
 			throw new UsuarioCadastroException(msg);
 		}
 	}
 
 	@Override
-	public UsuarioEntity buscarUsuario(Integer id) throws UsuarioNotFoundException {
+	public UsuarioEntity buscarUsuario(Integer id) {
 		Optional<UsuarioEntity> user = usuarioRepository.findById(id);
 		user.orElseThrow(() -> new UsuarioNotFoundException(Constantes.MSG_USUARIO_NAO_ENCONTRADO + id));
 		return user.get();
 	}
 
 	@Override
-	public void inativarUsuario(Integer id) throws UsuarioUpdateException, UsuarioNotFoundException {
+	public void inativarUsuario(Integer id) {
 		try {
 			Optional<UsuarioEntity> user = usuarioRepository.findById(id);
 			user.orElseThrow(UsuarioNotFoundException::new);
@@ -63,7 +71,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 	}
 
 	@Override
-	public void ativarUsuario(Integer id) throws UsuarioUpdateException, UsuarioNotFoundException {
+	public void ativarUsuario(Integer id) {
 		try {
 			Optional<UsuarioEntity> user = usuarioRepository.findById(id);
 			user.orElseThrow(UsuarioNotFoundException::new);
@@ -76,7 +84,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 	}
 
 	@Override
-	public void deletarUsuario(Integer id) throws UsuarioDeleteException, UsuarioNotFoundException {
+	public void deletarUsuario(Integer id) {
 		try {
 			Optional<UsuarioEntity> user = usuarioRepository.findById(id);
 			user.orElseThrow(UsuarioNotFoundException::new);
@@ -111,5 +119,32 @@ public class UsuarioServiceImpl implements UsuarioService {
 		entidade.setDataExpiracao(data.plusYears(1));
 		entidade.setAtivo(Boolean.TRUE);
 		return entidade;
+	}
+
+	/**
+	 * Verifica se usuario já existe
+	 * 
+	 * @param email
+	 *            email
+	 */
+	private void isUsuarioExistente(String email) {
+		UsuarioEntity en = usuarioRepository.findUsuarioPorEmail(email);
+		if (en != null)
+			throw new UsuarioCadastradoException(String.format(Constantes.MSG_VALIDACAO_USUARIO_JA_EXISTENTE, email));
+	}
+
+	/**
+	 * Verifica se senha esta no padrão
+	 * 
+	 * @param senha
+	 *            senha
+	 */
+	private String criptografarSenha(String senha) {
+		if (!senha.matches("[a-zA-Z0-9]+"))
+			throw new UsuarioPadraoSenhaException(Constantes.MSG_VALIDACAO_PADRAO_SENHA);
+		
+		//TO DO criptografar senha e remover validação
+		
+		return "";
 	}
 }
