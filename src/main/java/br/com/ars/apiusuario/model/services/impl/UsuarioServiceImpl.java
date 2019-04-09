@@ -34,9 +34,10 @@ public class UsuarioServiceImpl implements UsuarioService {
 	@Override
 	public UsuarioEntity cadastrarUsuario(UsuarioDTO usuarioDTO) {
 
+		//TODO
 		isUsuarioExistente(usuarioDTO.getEmail());
 		
-		// TO DO
+		// TODO
 		criptografarSenha(usuarioDTO.getSenha());
 
 		try {
@@ -143,7 +144,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 		if (!senha.matches("[a-zA-Z0-9]+"))
 			throw new UsuarioPadraoSenhaException(Constantes.MSG_VALIDACAO_PADRAO_SENHA);
 		
-		//TO DO criptografar senha e remover validação
+		//TODO criptografar senha e remover validação
 		
 		return "";
 	}
