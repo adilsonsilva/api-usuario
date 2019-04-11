@@ -6,6 +6,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(HttpStatus.NON_AUTHORITATIVE_INFORMATION)
 public class UsuarioCadastradoException extends RuntimeException {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public UsuarioCadastradoException(String mensagem) {
 		super(mensagem);
 	}

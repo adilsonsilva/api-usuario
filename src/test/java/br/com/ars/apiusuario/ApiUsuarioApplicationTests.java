@@ -1,9 +1,8 @@
 package br.com.ars.apiusuario;
 
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,67 +24,67 @@ public class ApiUsuarioApplicationTests {
 
 	@Autowired
 	UsuarioService usuarioService;
+	
+	@Before
+	public void inicializar() {
+		UsuarioDTO usuarioDTO = new UsuarioDTO();
+		usuarioDTO.setAtivo(Boolean.TRUE);
+		usuarioDTO.setEmail("dois@teste.com.br");
+		usuarioDTO.setNome("Teste Dois");
+		usuarioDTO.setSenha("12de34");
 
-	@Test
-	public void buscaUsuarioNaoExistente() {
-		assertNotNull(usuarioService.buscarUsuario(1));
+		usuarioService.cadastrarUsuario(usuarioDTO);
 	}
 
 	@Test
-	public void criarUsuario() {
+	public void testeUsuario_BuscarUsuarioPorId_NaoExistente() {
+		assertNotNull(usuarioService.buscarUsuario(100));
+	}
+
+	@Test
+	public void testeUsuario_criar() {
 
 		UsuarioDTO usuarioDTO = new UsuarioDTO();
 		usuarioDTO.setAtivo(Boolean.TRUE);
-		usuarioDTO.setEmail("teste@teste.com.br");
-		usuarioDTO.setNome("Teste Unitario");
+		usuarioDTO.setEmail("quatro@teste.com.br");
+		usuarioDTO.setNome("Teste Quatro");
 		usuarioDTO.setSenha("12de34");
 
 		UsuarioEntity ent = usuarioService.cadastrarUsuario(usuarioDTO);
 
-		assertTrue(ent != null);
+		assertNotNull(ent);
 	}
-	
-	@Test
-	public void criarUsuarioSenhaForaPadrao() {
+
+	@Test(expected = UsuarioPadraoSenhaException.class)
+	public void testeUsuario_ValidacaoSenha_ForaPadrao() {
 
 		UsuarioDTO usuarioDTO = new UsuarioDTO();
 		usuarioDTO.setAtivo(Boolean.TRUE);
-		usuarioDTO.setEmail("Ateste@teste.com.br");
-		usuarioDTO.setNome("Teste Unitario");
+		usuarioDTO.setEmail("cinco@teste.com.br");
+		usuarioDTO.setNome("Teste Cinco");
 		usuarioDTO.setSenha("@@1111");
-		UsuarioEntity ent = null;
-		try {
-			ent = usuarioService.cadastrarUsuario(usuarioDTO);
-		}catch (UsuarioPadraoSenhaException e) {
-			assertNull(ent);
-		}
-	}
-	
-	@Test
-	public void criarUsuarioJaCadastrado() {
+		usuarioService.cadastrarUsuario(usuarioDTO);
 
+	}
+
+	@Test(expected = UsuarioCadastradoException.class)
+	public void testeUsuario_UsuarioJaCadastrado() {
+		
 		UsuarioDTO usuarioDTO = new UsuarioDTO();
 		usuarioDTO.setAtivo(Boolean.TRUE);
-		usuarioDTO.setEmail("Bteste@teste.com.br");
-		usuarioDTO.setNome("Teste Unitario");
-		usuarioDTO.setSenha("AA1111");
-		
-		UsuarioDTO _usuarioDTO = new UsuarioDTO();
-		_usuarioDTO.setAtivo(Boolean.TRUE);
-		_usuarioDTO.setEmail("Bteste@teste.com.br");
-		_usuarioDTO.setNome("Teste Unitario");
-		_usuarioDTO.setSenha("AA1111");
-		
-		UsuarioEntity ent1 = usuarioService.cadastrarUsuario(usuarioDTO);
-		
-		assertNotNull(ent1);
-		
-		UsuarioEntity ent = null;
-		try {
-			ent = usuarioService.cadastrarUsuario(_usuarioDTO);
-		}catch (UsuarioCadastradoException e) {
-			assertNull(ent);
-		}
+		usuarioDTO.setEmail("um@teste.com.br");
+		usuarioDTO.setNome("Teste Um");
+		usuarioDTO.setSenha("3344ff");
+
+		usuarioService.cadastrarUsuario(usuarioDTO);
+
+		UsuarioDTO usuarioDTO2 = new UsuarioDTO();
+		usuarioDTO2.setAtivo(Boolean.TRUE);
+		usuarioDTO2.setEmail("um@teste.com.br");
+		usuarioDTO2.setNome("Teste Um");
+		usuarioDTO2.setSenha("3344ff");
+
+		usuarioService.cadastrarUsuario(usuarioDTO2);
 	}
 
 	@Test
