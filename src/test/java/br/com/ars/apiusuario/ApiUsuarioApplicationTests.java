@@ -1,7 +1,9 @@
 package br.com.ars.apiusuario;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,8 +14,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import br.com.ars.apiusuario.dto.UsuarioDTO;
 import br.com.ars.apiusuario.exception.UsuarioCadastradoException;
+import br.com.ars.apiusuario.exception.UsuarioNotFoundException;
 import br.com.ars.apiusuario.exception.UsuarioPadraoSenhaException;
 import br.com.ars.apiusuario.model.entitys.UsuarioEntity;
+import br.com.ars.apiusuario.model.repository.UsuarioRepository;
 import br.com.ars.apiusuario.model.services.UsuarioService;
 
 @RunWith(SpringRunner.class)
@@ -24,7 +28,10 @@ public class ApiUsuarioApplicationTests {
 
 	@Autowired
 	UsuarioService usuarioService;
-	
+
+	@Autowired
+	UsuarioRepository respository;
+
 	@Before
 	public void inicializar() {
 		UsuarioDTO usuarioDTO = new UsuarioDTO();
@@ -36,9 +43,16 @@ public class ApiUsuarioApplicationTests {
 		usuarioService.cadastrarUsuario(usuarioDTO);
 	}
 
-	@Test
+	@After
+	public void finalizar() {
+
+		respository.deleteAll();
+
+	}
+
+	@Test(expected = UsuarioNotFoundException.class)
 	public void testeUsuario_BuscarUsuarioPorId_NaoExistente() {
-		assertNotNull(usuarioService.buscarUsuario(100));
+		assertNull(usuarioService.buscarUsuario(100));
 	}
 
 	@Test
@@ -69,7 +83,7 @@ public class ApiUsuarioApplicationTests {
 
 	@Test(expected = UsuarioCadastradoException.class)
 	public void testeUsuario_UsuarioJaCadastrado() {
-		
+
 		UsuarioDTO usuarioDTO = new UsuarioDTO();
 		usuarioDTO.setAtivo(Boolean.TRUE);
 		usuarioDTO.setEmail("um@teste.com.br");
@@ -89,7 +103,7 @@ public class ApiUsuarioApplicationTests {
 
 	@Test
 	public void buscarUsuarioPorId() {
-
+		assertNotNull(usuarioService.buscarUsuario(1));
 	}
 
 	@Test
