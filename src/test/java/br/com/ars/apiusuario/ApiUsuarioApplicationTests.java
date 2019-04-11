@@ -2,6 +2,8 @@ package br.com.ars.apiusuario;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import org.junit.After;
 import org.junit.Before;
@@ -14,6 +16,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import br.com.ars.apiusuario.dto.UsuarioDTO;
 import br.com.ars.apiusuario.exception.UsuarioCadastradoException;
+import br.com.ars.apiusuario.exception.UsuarioDeleteException;
 import br.com.ars.apiusuario.exception.UsuarioNotFoundException;
 import br.com.ars.apiusuario.exception.UsuarioPadraoSenhaException;
 import br.com.ars.apiusuario.model.entitys.UsuarioEntity;
@@ -48,11 +51,6 @@ public class ApiUsuarioApplicationTests {
 
 		respository.deleteAll();
 
-	}
-
-	@Test(expected = UsuarioNotFoundException.class)
-	public void testeUsuario_BuscarUsuarioPorId_NaoExistente() {
-		assertNull(usuarioService.buscarUsuario(100));
 	}
 
 	@Test
@@ -102,13 +100,31 @@ public class ApiUsuarioApplicationTests {
 	}
 
 	@Test
-	public void buscarUsuarioPorId() {
+	public void testeUsuario_BuscarUsuarioPorId() {
 		assertNotNull(usuarioService.buscarUsuario(1));
 	}
 
-	@Test
-	public void deletarUsuario() {
+	@Test(expected = UsuarioNotFoundException.class)
+	public void testeUsuario_BuscarUsuarioPorId_NaoExistente() {
+		assertNull(usuarioService.buscarUsuario(100));
+	}
 
+	@Test
+	public void testeUsuairo_DeletarUsuario() {
+
+		try {
+			usuarioService.deletarUsuario(1);
+		} catch (UsuarioDeleteException e) {
+			fail();
+		}
+
+		assertTrue(Boolean.TRUE);
+
+	}
+
+	@Test(expected = UsuarioNotFoundException.class)
+	public void testeUsuario_DeletarUsuario_Inexistente() {
+		usuarioService.deletarUsuario(50);
 	}
 
 }
