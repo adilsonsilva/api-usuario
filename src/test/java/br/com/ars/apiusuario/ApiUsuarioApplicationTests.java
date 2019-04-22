@@ -1,5 +1,6 @@
 package br.com.ars.apiusuario;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -15,6 +16,7 @@ import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import org.springframework.test.context.jdbc.SqlGroup;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import br.com.ars.apiusuario.constantes.Constantes;
 import br.com.ars.apiusuario.dto.UsuarioDTO;
 import br.com.ars.apiusuario.exception.UsuarioCadastradoException;
 import br.com.ars.apiusuario.exception.UsuarioDeleteException;
@@ -28,7 +30,8 @@ import br.com.ars.apiusuario.model.services.UsuarioService;
 @ActiveProfiles("test")
 @SqlGroup({
     @Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:beforeTestRun.sql"),
-    @Sql(executionPhase = ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:afterTestRun.sql") })
+    @Sql(executionPhase = ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:afterTestRun.sql") 
+    })
 public class ApiUsuarioApplicationTests {
 
 	@Autowired
@@ -50,7 +53,7 @@ public class ApiUsuarioApplicationTests {
 
 	@Test(expected = UsuarioPadraoSenhaException.class)
 	public void testeUsuario_ValidacaoSenha_ForaPadrao() {
-
+		
 		UsuarioDTO usuarioDTO = new UsuarioDTO();
 		usuarioDTO.setAtivo(Boolean.TRUE);
 		usuarioDTO.setEmail("cinco@teste.com.br");
@@ -95,9 +98,15 @@ public class ApiUsuarioApplicationTests {
 
 	}
 
-	@Test(expected = UsuarioNotFoundException.class)
+	@Test
 	public void testeUsuario_DeletarUsuario_Inexistente() {
-		usuarioService.deletarUsuario(50);
+		
+		try {
+			usuarioService.deletarUsuario(550);
+			fail();
+		}catch (UsuarioNotFoundException e) {
+			assertTrue(Boolean.TRUE);
+		}
 	}
 
 }

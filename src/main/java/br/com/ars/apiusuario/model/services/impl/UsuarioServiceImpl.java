@@ -86,10 +86,12 @@ public class UsuarioServiceImpl implements UsuarioService {
 
 	@Override
 	public void deletarUsuario(Integer id) {
+		
+		Optional<UsuarioEntity> user = usuarioRepository.findById(id);
+		user.orElseThrow(UsuarioNotFoundException::new);
+		UsuarioEntity entity = user.get();
+		
 		try {
-			Optional<UsuarioEntity> user = usuarioRepository.findById(id);
-			user.orElseThrow(UsuarioNotFoundException::new);
-			UsuarioEntity entity = user.get();
 			usuarioRepository.delete(entity);
 		} catch (Exception e) {
 			String msg = String.format(Constantes.MSG_ERRO_DELETE_USUARIO, id);
