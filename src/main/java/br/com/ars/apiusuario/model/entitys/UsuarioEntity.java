@@ -18,7 +18,7 @@ import javax.persistence.Table;
  *
  */
 @Entity
-@Table(name = "usuario", schema="dbo")
+@Table(name = "usuario")
 public class UsuarioEntity implements Serializable {
 
 	/**
