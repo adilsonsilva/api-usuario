@@ -18,7 +18,7 @@ import javax.persistence.Table;
  *
  */
 @Entity
-@Table(name = "usuario", schema = "public")
+@Table(name = "usuario", schema="dbo")
 public class UsuarioEntity implements Serializable {
 
 	/**
@@ -50,10 +50,10 @@ public class UsuarioEntity implements Serializable {
 	@Column(name = "ativo")
 	private Boolean ativo;
 
-	@Column(name = "dataCadastro")
+	@Column(name = "data_cadastro")
 	private LocalDateTime dataCadastro;
 
-	@Column(name = "dataExpiracao")
+	@Column(name = "data_expiracao")
 	private LocalDateTime dataExpiracao;
 
 	/*

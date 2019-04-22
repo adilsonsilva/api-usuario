@@ -5,13 +5,14 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
+import org.springframework.test.context.jdbc.SqlGroup;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import br.com.ars.apiusuario.dto.UsuarioDTO;
@@ -20,38 +21,18 @@ import br.com.ars.apiusuario.exception.UsuarioDeleteException;
 import br.com.ars.apiusuario.exception.UsuarioNotFoundException;
 import br.com.ars.apiusuario.exception.UsuarioPadraoSenhaException;
 import br.com.ars.apiusuario.model.entitys.UsuarioEntity;
-import br.com.ars.apiusuario.model.repository.UsuarioRepository;
 import br.com.ars.apiusuario.model.services.UsuarioService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-// @DataJpaTest
 @ActiveProfiles("test")
+@SqlGroup({
+    @Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:beforeTestRun.sql"),
+    @Sql(executionPhase = ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:afterTestRun.sql") })
 public class ApiUsuarioApplicationTests {
 
 	@Autowired
 	UsuarioService usuarioService;
-
-	@Autowired
-	UsuarioRepository respository;
-
-	@Before
-	public void inicializar() {
-		UsuarioDTO usuarioDTO = new UsuarioDTO();
-		usuarioDTO.setAtivo(Boolean.TRUE);
-		usuarioDTO.setEmail("dois@teste.com.br");
-		usuarioDTO.setNome("Teste Dois");
-		usuarioDTO.setSenha("12de34");
-
-		usuarioService.cadastrarUsuario(usuarioDTO);
-	}
-
-	@After
-	public void finalizar() {
-
-		respository.deleteAll();
-
-	}
 
 	@Test
 	public void testeUsuario_criar() {
@@ -82,19 +63,11 @@ public class ApiUsuarioApplicationTests {
 	@Test(expected = UsuarioCadastradoException.class)
 	public void testeUsuario_UsuarioJaCadastrado() {
 
-		UsuarioDTO usuarioDTO = new UsuarioDTO();
-		usuarioDTO.setAtivo(Boolean.TRUE);
-		usuarioDTO.setEmail("um@teste.com.br");
-		usuarioDTO.setNome("Teste Um");
-		usuarioDTO.setSenha("3344ff");
-
-		usuarioService.cadastrarUsuario(usuarioDTO);
-
 		UsuarioDTO usuarioDTO2 = new UsuarioDTO();
 		usuarioDTO2.setAtivo(Boolean.TRUE);
-		usuarioDTO2.setEmail("um@teste.com.br");
-		usuarioDTO2.setNome("Teste Um");
-		usuarioDTO2.setSenha("3344ff");
+		usuarioDTO2.setEmail("teste@teste.com.br");
+		usuarioDTO2.setNome("Adilson Silva");
+		usuarioDTO2.setSenha("123456");
 
 		usuarioService.cadastrarUsuario(usuarioDTO2);
 	}
