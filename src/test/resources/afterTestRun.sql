@@ -1,1 +1,1 @@
-DROP TABLE dbo.usuario
+DROP TABLE usuario
