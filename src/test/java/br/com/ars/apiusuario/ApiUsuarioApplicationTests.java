@@ -108,5 +108,10 @@ public class ApiUsuarioApplicationTests {
 			assertTrue(Boolean.TRUE);
 		}
 	}
+	
+	@Test
+	public void testeUsuario_listarTodos() {
+		assertNotNull(usuarioService.listarUsuarios());
+	}
 
 }
