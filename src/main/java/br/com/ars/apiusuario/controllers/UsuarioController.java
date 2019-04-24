@@ -5,11 +5,14 @@ package br.com.ars.apiusuario.controllers;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,7 +46,7 @@ public class UsuarioController {
 
 	@ApiOperation(value = "Cadastro de usuario")
 	@PostMapping
-	public ResponseEntity<Response<UsuarioEntity>> cadastrar(@RequestBody UsuarioDTO usuarioDTO) {
+	public ResponseEntity<Response<UsuarioEntity>> cadastrar(@Valid @RequestBody UsuarioDTO usuarioDTO, BindingResult bli) {
 
 		logger.info("Cadastrando o usuario: " + usuarioDTO.toString());
 

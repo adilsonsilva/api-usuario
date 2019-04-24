@@ -3,6 +3,12 @@ package br.com.ars.apiusuario.dto;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
+import br.com.ars.apiusuario.validators.LetrasAndNumeros;
+
 public class UsuarioDTO implements Serializable {
 
 	/**
@@ -11,10 +17,22 @@ public class UsuarioDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Integer id;
+
+	@NotBlank(message = "Não pode ser nulo")
+	@Size(min = 3, max = 100, message = "Nome pode conter, minimo de 3 e maximo de 100 caracteres")
 	private String nome;
+
+	@NotBlank(message = "Não pode ser nulo")
+	@Size(max = 100, message = "E-mail so pode conter 100 caracteres")
+	@Email(message = "E-mail informado não e valido")
 	private String email;
+
+	@NotBlank(message = "Não pode ser nulo")
+	@LetrasAndNumeros
 	private String senha;
+
 	private LocalDateTime dataCadastro;
+
 	private LocalDateTime dataExpiracao;
 	private Boolean ativo;
 

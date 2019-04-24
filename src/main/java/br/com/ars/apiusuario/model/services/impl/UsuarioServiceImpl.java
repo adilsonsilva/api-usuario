@@ -38,10 +38,10 @@ public class UsuarioServiceImpl implements UsuarioService {
 
 		// TODO
 		isUsuarioExistente(usuarioDTO.getEmail());
-
-		// TODO
-		String senhaCriptografada = criptografarSenha(usuarioDTO.getSenha());
-
+		
+		Criptografia criptografia = new Criptografia();
+		String senhaCriptografada = criptografia.criptografarSenha(usuarioDTO.getSenha());
+		
 		try {
 			UsuarioEntity entidade = obterEntidadeUsuario(usuarioDTO, senhaCriptografada);
 			usuarioRepository.save(entidade);
@@ -137,18 +137,5 @@ public class UsuarioServiceImpl implements UsuarioService {
 		UsuarioEntity en = usuarioRepository.findUsuarioPorEmail(email);
 		if (en != null)
 			throw new UsuarioCadastradoException(String.format(Constantes.MSG_VALIDACAO_USUARIO_JA_EXISTENTE, email));
-	}
-
-	/**
-	 * Verifica se senha esta no padrão
-	 * 
-	 * @param senha
-	 *            senha para criptografar
-	 */
-	private String criptografarSenha(String senha) {
-		if (StringUtils.isEmpty(senha) || !senha.matches("[a-zA-Z0-9]+"))
-			throw new UsuarioPadraoSenhaException(Constantes.MSG_VALIDACAO_PADRAO_SENHA);
-		Criptografia criptografia = new Criptografia();
-		return criptografia.criptografarSenha(senha);
 	}
 }

@@ -50,7 +50,7 @@ public class UsuarioEntity implements Serializable {
 	@Column(name = "senha")
 	private String senha;
 
-	@Column(name = "ativo", columnDefinition = "tinyint(1) default 1")
+	@Column(name = "ativo")
 	private Boolean ativo;
 
 	@Column(name = "data_cadastro")
@@ -59,7 +59,7 @@ public class UsuarioEntity implements Serializable {
 	@Column(name = "data_expiracao")
 	private LocalDateTime dataExpiracao;
 
-	@Column(name = "usuario_admin", columnDefinition = "tinyint(1) default 1")
+	@Column(name = "usuario_admin")
 	private Boolean admin;
 
 	/*
