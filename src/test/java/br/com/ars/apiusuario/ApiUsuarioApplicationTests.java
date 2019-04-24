@@ -48,18 +48,6 @@ public class ApiUsuarioApplicationTests {
 		assertNotNull(ent);
 	}
 
-	@Test(expected = UsuarioPadraoSenhaException.class)
-	public void testeUsuario_ValidacaoSenha_ForaPadrao() {
-
-		UsuarioDTO usuarioDTO = new UsuarioDTO();
-		usuarioDTO.setAtivo(Boolean.TRUE);
-		usuarioDTO.setEmail("cinco@teste.com.br");
-		usuarioDTO.setNome("Teste Cinco");
-		usuarioDTO.setSenha("@@1111");
-		usuarioService.cadastrarUsuario(usuarioDTO);
-
-	}
-
 	@Test(expected = UsuarioCadastradoException.class)
 	public void testeUsuario_UsuarioJaCadastrado() {
 
