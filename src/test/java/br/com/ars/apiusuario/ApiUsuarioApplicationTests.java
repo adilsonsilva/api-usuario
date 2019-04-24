@@ -1,6 +1,5 @@
 package br.com.ars.apiusuario;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -16,7 +15,6 @@ import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import org.springframework.test.context.jdbc.SqlGroup;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import br.com.ars.apiusuario.constantes.Constantes;
 import br.com.ars.apiusuario.dto.UsuarioDTO;
 import br.com.ars.apiusuario.exception.UsuarioCadastradoException;
 import br.com.ars.apiusuario.exception.UsuarioDeleteException;

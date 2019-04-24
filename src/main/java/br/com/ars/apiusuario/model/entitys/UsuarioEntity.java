@@ -34,10 +34,11 @@ public class UsuarioEntity implements Serializable {
 	public static final String ATIVO = "ativo";
 	public static final String DATA_CADASTRO = "dataCadastro";
 	public static final String DATA_EXPIRACAO = "dataExpiracao";
+	public static final String USER_ADMIN = "userAdmin";
 
 	@Id
 	@Column(name = "id")
-	@GeneratedValue(strategy = GenerationType.AUTO, generator="usuario_seq")
+	@GeneratedValue(strategy = GenerationType.AUTO, generator = "usuario_seq")
 	private Integer id;
 
 	@Column(name = "nome")
@@ -49,7 +50,7 @@ public class UsuarioEntity implements Serializable {
 	@Column(name = "senha")
 	private String senha;
 
-	@Column(name = "ativo")
+	@Column(name = "ativo", columnDefinition = "tinyint(1) default 1")
 	private Boolean ativo;
 
 	@Column(name = "data_cadastro")
@@ -57,6 +58,9 @@ public class UsuarioEntity implements Serializable {
 
 	@Column(name = "data_expiracao")
 	private LocalDateTime dataExpiracao;
+
+	@Column(name = "usuario_admin", columnDefinition = "tinyint(1) default 1")
+	private Boolean admin;
 
 	/*
 	 * (non-Javadoc)
@@ -67,6 +71,7 @@ public class UsuarioEntity implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((admin == null) ? 0 : admin.hashCode());
 		result = prime * result + ((ativo == null) ? 0 : ativo.hashCode());
 		result = prime * result + ((dataCadastro == null) ? 0 : dataCadastro.hashCode());
 		result = prime * result + ((dataExpiracao == null) ? 0 : dataExpiracao.hashCode());
@@ -91,6 +96,11 @@ public class UsuarioEntity implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		UsuarioEntity other = (UsuarioEntity) obj;
+		if (admin == null) {
+			if (other.admin != null)
+				return false;
+		} else if (!admin.equals(other.admin))
+			return false;
 		if (ativo == null) {
 			if (other.ativo != null)
 				return false;
@@ -234,6 +244,21 @@ public class UsuarioEntity implements Serializable {
 		this.dataExpiracao = dataExpiracao;
 	}
 
+	/**
+	 * @return the admin
+	 */
+	public Boolean getAdmin() {
+		return admin;
+	}
+
+	/**
+	 * @param admin
+	 *            the admin to set
+	 */
+	public void setAdmin(Boolean admin) {
+		this.admin = admin;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -241,8 +266,9 @@ public class UsuarioEntity implements Serializable {
 	 */
 	@Override
 	public String toString() {
-		return "Usuario [id=" + id + ", nome=" + nome + ", email=" + email + ", senha=" + senha + ", ativo=" + ativo
-				+ ", dataCadastro=" + dataCadastro + ", dataExpiracao=" + dataExpiracao + "]";
+		return "UsuarioEntity [id=" + id + ", nome=" + nome + ", email=" + email + ", senha=" + senha + ", ativo="
+				+ ativo + ", dataCadastro=" + dataCadastro + ", dataExpiracao=" + dataExpiracao + ", admin=" + admin
+				+ "]";
 	}
 
 }
