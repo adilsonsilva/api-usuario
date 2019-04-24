@@ -2,7 +2,7 @@
 
 Quality status Travis CI:  [![Build Status](https://travis-ci.org/adilsonsilva/api-usuario.svg?branch=master)](https://travis-ci.org/adilsonsilva/api-usuario)
 
-# autenticacao
+# Api usuário
 
 # Micro serviço para funcionalidades do usuario
 
