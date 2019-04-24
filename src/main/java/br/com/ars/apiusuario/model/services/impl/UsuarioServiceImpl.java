@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import br.com.ars.apiusuario.constantes.Constantes;
 import br.com.ars.apiusuario.controllers.UsuarioController;
@@ -22,6 +23,7 @@ import br.com.ars.apiusuario.exception.UsuarioUpdateException;
 import br.com.ars.apiusuario.model.entitys.UsuarioEntity;
 import br.com.ars.apiusuario.model.repository.UsuarioRepository;
 import br.com.ars.apiusuario.model.services.UsuarioService;
+import br.com.ars.apiusuario.utils.Criptografia;
 
 @Service
 public class UsuarioServiceImpl implements UsuarioService {
@@ -34,14 +36,14 @@ public class UsuarioServiceImpl implements UsuarioService {
 	@Override
 	public UsuarioEntity cadastrarUsuario(UsuarioDTO usuarioDTO) {
 
-		//TODO
-		isUsuarioExistente(usuarioDTO.getEmail());
-		
 		// TODO
-		criptografarSenha(usuarioDTO.getSenha());
+		isUsuarioExistente(usuarioDTO.getEmail());
+
+		// TODO
+		String senhaCriptografada = criptografarSenha(usuarioDTO.getSenha());
 
 		try {
-			UsuarioEntity entidade = obterEntidadeUsuario(usuarioDTO);
+			UsuarioEntity entidade = obterEntidadeUsuario(usuarioDTO, senhaCriptografada);
 			usuarioRepository.save(entidade);
 			return entidade;
 		} catch (Exception e) {
@@ -86,11 +88,11 @@ public class UsuarioServiceImpl implements UsuarioService {
 
 	@Override
 	public void deletarUsuario(Integer id) {
-		
+
 		Optional<UsuarioEntity> user = usuarioRepository.findById(id);
 		user.orElseThrow(UsuarioNotFoundException::new);
 		UsuarioEntity entity = user.get();
-		
+
 		try {
 			usuarioRepository.delete(entity);
 		} catch (Exception e) {
@@ -112,12 +114,13 @@ public class UsuarioServiceImpl implements UsuarioService {
 	 *            usuarioDTO
 	 * @return UsuarioEntity
 	 */
-	private UsuarioEntity obterEntidadeUsuario(UsuarioDTO usuarioDTO) {
+	private UsuarioEntity obterEntidadeUsuario(UsuarioDTO usuarioDTO, String senhaCriptografada) {
 		UsuarioEntity entidade = new UsuarioEntity();
 		BeanUtils.copyProperties(usuarioDTO, entidade);
 
 		LocalDateTime data = LocalDateTime.now();
 
+		entidade.setSenha(senhaCriptografada);
 		entidade.setDataCadastro(data);
 		entidade.setDataExpiracao(data.plusYears(1));
 		entidade.setAtivo(Boolean.TRUE);
@@ -140,14 +143,12 @@ public class UsuarioServiceImpl implements UsuarioService {
 	 * Verifica se senha esta no padrão
 	 * 
 	 * @param senha
-	 *            senha
+	 *            senha para criptografar
 	 */
 	private String criptografarSenha(String senha) {
-		if (!senha.matches("[a-zA-Z0-9]+"))
+		if (StringUtils.isEmpty(senha) || !senha.matches("[a-zA-Z0-9]+"))
 			throw new UsuarioPadraoSenhaException(Constantes.MSG_VALIDACAO_PADRAO_SENHA);
-		
-		//TODO criptografar senha e remover validação
-		
-		return "";
+		Criptografia criptografia = new Criptografia();
+		return criptografia.criptografarSenha(senha);
 	}
 }
