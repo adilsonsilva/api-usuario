@@ -54,15 +54,14 @@ public class UsuarioServiceImpl implements UsuarioService {
 	@Override
 	public UsuarioEntity buscarUsuario(Integer id) {
 		Optional<UsuarioEntity> user = usuarioRepository.findById(id);
-		user.orElseThrow(() -> new UsuarioNotFoundException(Constantes.MSG_USUARIO_NAO_ENCONTRADO + id));
-		return user.get();
+		return user.orElseThrow(() -> new UsuarioNotFoundException(Constantes.MSG_USUARIO_NAO_ENCONTRADO + id));
 	}
 
 	@Override
 	public void inativarUsuario(Integer id) {
 
 		Optional<UsuarioEntity> user = usuarioRepository.findById(id);
-		user.orElseThrow(UsuarioNotFoundException::new);
+		user.orElseThrow(() -> new UsuarioNotFoundException(Constantes.MSG_USUARIO_NAO_ENCONTRADO + id));
 
 		try {
 			usuarioRepository.updateStatusUsuario(id, Boolean.FALSE);
@@ -77,7 +76,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 	public void ativarUsuario(Integer id) {
 
 		Optional<UsuarioEntity> user = usuarioRepository.findById(id);
-		user.orElseThrow(UsuarioNotFoundException::new);
+		user.orElseThrow(() -> new UsuarioNotFoundException(Constantes.MSG_USUARIO_NAO_ENCONTRADO + id));
 
 		try {
 			usuarioRepository.updateStatusUsuario(id, Boolean.TRUE);
@@ -92,8 +91,8 @@ public class UsuarioServiceImpl implements UsuarioService {
 	public void deletarUsuario(Integer id) {
 
 		Optional<UsuarioEntity> user = usuarioRepository.findById(id);
-		user.orElseThrow(UsuarioNotFoundException::new);
-		UsuarioEntity entity = user.get();
+		UsuarioEntity entity = Optional.ofNullable(user.get())
+				.orElseThrow(() -> new UsuarioNotFoundException(Constantes.MSG_USUARIO_NAO_ENCONTRADO + id));
 
 		try {
 			usuarioRepository.delete(entity);
