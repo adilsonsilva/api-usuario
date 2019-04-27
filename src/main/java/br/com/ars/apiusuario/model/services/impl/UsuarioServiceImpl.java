@@ -36,10 +36,10 @@ public class UsuarioServiceImpl implements UsuarioService {
 
 		// TODO
 		isUsuarioExistente(usuarioDTO.getEmail());
-		
+
 		Criptografia criptografia = new Criptografia();
 		String senhaCriptografada = criptografia.criptografarSenha(usuarioDTO.getSenha());
-		
+
 		try {
 			UsuarioEntity entidade = obterEntidadeUsuario(usuarioDTO, senhaCriptografada);
 			usuarioRepository.save(entidade);
@@ -60,9 +60,11 @@ public class UsuarioServiceImpl implements UsuarioService {
 
 	@Override
 	public void inativarUsuario(Integer id) {
+
+		Optional<UsuarioEntity> user = usuarioRepository.findById(id);
+		user.orElseThrow(UsuarioNotFoundException::new);
+
 		try {
-			Optional<UsuarioEntity> user = usuarioRepository.findById(id);
-			user.orElseThrow(UsuarioNotFoundException::new);
 			usuarioRepository.updateStatusUsuario(id, Boolean.FALSE);
 		} catch (Exception e) {
 			String msg = String.format(Constantes.MSG_ERRO_INATIVAR_USUARIO, id);
@@ -73,9 +75,11 @@ public class UsuarioServiceImpl implements UsuarioService {
 
 	@Override
 	public void ativarUsuario(Integer id) {
+
+		Optional<UsuarioEntity> user = usuarioRepository.findById(id);
+		user.orElseThrow(UsuarioNotFoundException::new);
+
 		try {
-			Optional<UsuarioEntity> user = usuarioRepository.findById(id);
-			user.orElseThrow(UsuarioNotFoundException::new);
 			usuarioRepository.updateStatusUsuario(id, Boolean.TRUE);
 		} catch (Exception e) {
 			String msg = String.format(Constantes.MSG_ERRO_ATIVAR_USUARIO, id);

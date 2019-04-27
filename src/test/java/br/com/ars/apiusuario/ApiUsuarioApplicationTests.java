@@ -1,5 +1,6 @@
 package br.com.ars.apiusuario;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -129,34 +130,44 @@ public class ApiUsuarioApplicationTests {
 		}
 
 	}
-	
+
 	@Test
 	public void testeUsuario_ativar() {
-		
-		UsuarioEntity usuarioAtivo = usuarioService.buscarUsuario(Integer.valueOf(4));
-		
-		boolean status = usuarioAtivo.getAtivo();
-		usuarioAtivo.setAtivo(Boolean.TRUE);
-		
+
+		UsuarioEntity usuarioInativo = usuarioService.buscarUsuario(Integer.valueOf(4));
+
+		boolean status = usuarioInativo.getAtivo();
+
+		usuarioService.ativarUsuario(Integer.valueOf(4));
+
 		UsuarioEntity usuarioPostAtivar = usuarioService.buscarUsuario(Integer.valueOf(4));
-		
-		assertNotEquals(status, usuarioPostAtivar.getAtivo());
-	}
-	
-	@Test
-	public void testeUsuario_inativar() {
-		
+
+		assertFalse(status);
+		assertTrue(usuarioPostAtivar.getAtivo());
 	}
 
 	@Test
+	public void testeUsuario_inativar() {
+		UsuarioEntity usuarioAtivo = usuarioService.buscarUsuario(Integer.valueOf(1));
+
+		boolean status = usuarioAtivo.getAtivo();
+
+		usuarioService.inativarUsuario(Integer.valueOf(1));
+
+		UsuarioEntity usuarioPostInativar = usuarioService.buscarUsuario(Integer.valueOf(1));
+
+		assertTrue(status);
+		assertFalse(usuarioPostInativar.getAtivo());
+	}
+
+	@Test(expected = UsuarioNotFoundException.class)
 	public void testeUsuario_naoEncontrado_ativar() {
-		
+		usuarioService.ativarUsuario(Integer.valueOf(5));
 	}
-	
-	@Test
+
+	@Test(expected = UsuarioNotFoundException.class)
 	public void testeUsuario_naoEncontrado_inativar() {
-		
+		usuarioService.ativarUsuario(Integer.valueOf(5));
 	}
-	
 
 }
