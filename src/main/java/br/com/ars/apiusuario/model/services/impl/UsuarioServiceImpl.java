@@ -9,7 +9,6 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import br.com.ars.apiusuario.constantes.Constantes;
 import br.com.ars.apiusuario.controllers.UsuarioController;
@@ -18,7 +17,6 @@ import br.com.ars.apiusuario.exception.UsuarioCadastradoException;
 import br.com.ars.apiusuario.exception.UsuarioCadastroException;
 import br.com.ars.apiusuario.exception.UsuarioDeleteException;
 import br.com.ars.apiusuario.exception.UsuarioNotFoundException;
-import br.com.ars.apiusuario.exception.UsuarioPadraoSenhaException;
 import br.com.ars.apiusuario.exception.UsuarioUpdateException;
 import br.com.ars.apiusuario.model.entitys.UsuarioEntity;
 import br.com.ars.apiusuario.model.repository.UsuarioRepository;

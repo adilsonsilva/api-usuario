@@ -129,5 +129,34 @@ public class ApiUsuarioApplicationTests {
 		}
 
 	}
+	
+	@Test
+	public void testeUsuario_ativar() {
+		
+		UsuarioEntity usuarioAtivo = usuarioService.buscarUsuario(Integer.valueOf(4));
+		
+		boolean status = usuarioAtivo.getAtivo();
+		usuarioAtivo.setAtivo(Boolean.TRUE);
+		
+		UsuarioEntity usuarioPostAtivar = usuarioService.buscarUsuario(Integer.valueOf(4));
+		
+		assertNotEquals(status, usuarioPostAtivar.getAtivo());
+	}
+	
+	@Test
+	public void testeUsuario_inativar() {
+		
+	}
+
+	@Test
+	public void testeUsuario_naoEncontrado_ativar() {
+		
+	}
+	
+	@Test
+	public void testeUsuario_naoEncontrado_inativar() {
+		
+	}
+	
 
 }

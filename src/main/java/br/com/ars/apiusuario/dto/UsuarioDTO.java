@@ -8,7 +8,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import br.com.ars.apiusuario.validators.LetrasAndNumeros;
-import io.swagger.annotations.ApiModelProperty;
 
 public class UsuarioDTO implements Serializable {
 
