@@ -17,6 +17,7 @@ import br.com.ars.apiusuario.exception.UsuarioCadastradoException;
 import br.com.ars.apiusuario.exception.UsuarioCadastroException;
 import br.com.ars.apiusuario.exception.UsuarioDeleteException;
 import br.com.ars.apiusuario.exception.UsuarioNotFoundException;
+import br.com.ars.apiusuario.exception.UsuarioPadraoSenhaException;
 import br.com.ars.apiusuario.exception.UsuarioUpdateException;
 import br.com.ars.apiusuario.model.entitys.UsuarioEntity;
 import br.com.ars.apiusuario.model.repository.UsuarioRepository;
@@ -34,16 +35,24 @@ public class UsuarioServiceImpl implements UsuarioService {
 	@Override
 	public UsuarioEntity cadastrarUsuario(UsuarioDTO usuarioDTO) {
 
-		// TODO
-		isUsuarioExistente(usuarioDTO.getEmail());
-
-		Criptografia criptografia = new Criptografia();
-		String senhaCriptografada = criptografia.criptografarSenha(usuarioDTO.getSenha());
-
 		try {
+
+			// TODO
+			isUsuarioExistente(usuarioDTO.getEmail());
+
+			// TODO
+			Criptografia criptografia = new Criptografia();
+			String senhaCriptografada = criptografia.criptografarSenha(usuarioDTO.getSenha());
+
 			UsuarioEntity entidade = obterEntidadeUsuario(usuarioDTO, senhaCriptografada);
 			usuarioRepository.save(entidade);
 			return entidade;
+		} catch (UsuarioPadraoSenhaException u) {
+			logger.info(u.getMessage());
+			throw new UsuarioPadraoSenhaException(u.getMessage());
+		} catch (UsuarioCadastradoException c) {
+			logger.info(c.getMessage());
+			throw new UsuarioCadastradoException(c.getMessage());
 		} catch (Exception e) {
 			String msg = String.format(Constantes.MSG_ERRO_CADASTRAR_USUARIO, usuarioDTO.getEmail());
 			logger.error(msg, e);
@@ -60,11 +69,18 @@ public class UsuarioServiceImpl implements UsuarioService {
 	@Override
 	public void inativarUsuario(Integer id) {
 
-		Optional<UsuarioEntity> user = usuarioRepository.findById(id);
-		user.orElseThrow(() -> new UsuarioNotFoundException(Constantes.MSG_USUARIO_NAO_ENCONTRADO + id));
-
 		try {
+			Optional<UsuarioEntity> user = usuarioRepository.findById(id);
+
+			if (!user.isPresent()) {
+				throw new UsuarioNotFoundException(Constantes.MSG_USUARIO_NAO_ENCONTRADO + id);
+			}
+
 			usuarioRepository.updateStatusUsuario(id, Boolean.FALSE);
+		} catch (UsuarioNotFoundException u) {
+			String msg = String.format(Constantes.MSG_USUARIO_NAO_ENCONTRADO, id);
+			logger.info(msg);
+			throw new UsuarioNotFoundException(u.getMessage());
 		} catch (Exception e) {
 			String msg = String.format(Constantes.MSG_ERRO_INATIVAR_USUARIO, id);
 			logger.error(msg, e);
@@ -75,11 +91,19 @@ public class UsuarioServiceImpl implements UsuarioService {
 	@Override
 	public void ativarUsuario(Integer id) {
 
-		Optional<UsuarioEntity> user = usuarioRepository.findById(id);
-		user.orElseThrow(() -> new UsuarioNotFoundException(Constantes.MSG_USUARIO_NAO_ENCONTRADO + id));
-
 		try {
+
+			Optional<UsuarioEntity> user = usuarioRepository.findById(id);
+
+			if (!user.isPresent()) {
+				throw new UsuarioNotFoundException(Constantes.MSG_USUARIO_NAO_ENCONTRADO + id);
+			}
+
 			usuarioRepository.updateStatusUsuario(id, Boolean.TRUE);
+		} catch (UsuarioNotFoundException u) {
+			String msg = String.format(Constantes.MSG_USUARIO_NAO_ENCONTRADO, id);
+			logger.info(msg);
+			throw new UsuarioNotFoundException(u.getMessage());
 		} catch (Exception e) {
 			String msg = String.format(Constantes.MSG_ERRO_ATIVAR_USUARIO, id);
 			logger.error(msg, e);
@@ -90,12 +114,19 @@ public class UsuarioServiceImpl implements UsuarioService {
 	@Override
 	public void deletarUsuario(Integer id) {
 
-		Optional<UsuarioEntity> user = usuarioRepository.findById(id);
-		UsuarioEntity entity = Optional.ofNullable(user.get())
-				.orElseThrow(() -> new UsuarioNotFoundException(Constantes.MSG_USUARIO_NAO_ENCONTRADO + id));
-
 		try {
-			usuarioRepository.delete(entity);
+
+			Optional<UsuarioEntity> user = usuarioRepository.findById(id);
+
+			if (!user.isPresent()) {
+				throw new UsuarioNotFoundException(Constantes.MSG_USUARIO_NAO_ENCONTRADO + id);
+			}
+
+			usuarioRepository.delete(user.get());
+		} catch (UsuarioNotFoundException u) {
+			String msg = String.format(Constantes.MSG_USUARIO_NAO_ENCONTRADO, id);
+			logger.info(msg);
+			throw new UsuarioNotFoundException(u.getMessage());
 		} catch (Exception e) {
 			String msg = String.format(Constantes.MSG_ERRO_DELETE_USUARIO, id);
 			logger.error(msg, e);
