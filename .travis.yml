@@ -4,7 +4,7 @@ jdk:
 
 maven-build:
     stage: build
-    script: script: ./mvnw test -B -P=prod
+    script: ./mvnw test -B -P=prod
 
 addons:
   sonarcloud:
