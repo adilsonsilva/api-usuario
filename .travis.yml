@@ -2,6 +2,10 @@ language: java
 jdk:
   - oraclejdk8
 
+maven-build:
+    stage: build
+    script: script: ./mvnw test -B -P=prod
+
 addons:
   sonarcloud:
     organization: "adilsonsilva-github" # the key of the org you chose at step #3

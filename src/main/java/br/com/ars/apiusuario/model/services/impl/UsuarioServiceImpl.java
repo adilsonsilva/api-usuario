@@ -156,6 +156,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 		entidade.setDataCadastro(data);
 		entidade.setDataExpiracao(data.plusYears(1));
 		entidade.setAtivo(Boolean.TRUE);
+		entidade.setAdmin(Boolean.FALSE);
 		return entidade;
 	}
 

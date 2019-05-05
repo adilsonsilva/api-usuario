@@ -67,7 +67,7 @@ public class UsuarioController {
 
 		usuarioService.deletarUsuario(id);
 		response.setData(Boolean.TRUE);
-		response.setMensagemSucesso(String.format("Usuario %s inativado com sucesso", id));
+		response.setMensagemSucesso(String.format("Usuario %s deletado com sucesso", id));
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
