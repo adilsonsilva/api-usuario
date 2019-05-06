@@ -4,7 +4,7 @@ jdk:
 
 maven-build:
     stage: build
-    script: ./mvnw test -B -P=prod
+    script: ./mvnw install -DskipTests=true -Dmaven.javadoc.skip=true -B -V -Pprod
 
 addons:
   sonarcloud:
