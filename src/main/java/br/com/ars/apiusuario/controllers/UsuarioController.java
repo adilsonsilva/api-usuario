@@ -45,15 +45,15 @@ public class UsuarioController {
 
 	@ApiOperation(value = "Cadastro de usuario")
 	@PostMapping
-	public ResponseEntity<Response<UsuarioEntity>> cadastrar(@Valid @RequestBody UsuarioDTO usuarioDTO) {
+	public ResponseEntity<Response<UsuarioDTO>> cadastrar(@Valid @RequestBody UsuarioDTO usuarioDTO) {
 
 		LOGGER.info("Cadastrando o usuario: " + usuarioDTO.toString());
 
-		Response<UsuarioEntity> response = new Response<>();
+		Response<UsuarioDTO> response = new Response<>();
 
-		UsuarioEntity usuarioCriado = usuarioService.cadastrarUsuario(usuarioDTO);
+		usuarioService.cadastrarUsuario(usuarioDTO);
 
-		response.setData(usuarioCriado);
+		response.setData(usuarioDTO);
 		response.setMensagemSucesso("Dados cadastrados com sucesso");
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}

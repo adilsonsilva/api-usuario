@@ -7,7 +7,7 @@ import br.com.ars.apiusuario.model.entitys.UsuarioEntity;
 
 public interface UsuarioService {
 
-	public UsuarioEntity cadastrarUsuario(UsuarioDTO usuarioDTO);
+	public void cadastrarUsuario(UsuarioDTO usuarioDTO);
 
 	public UsuarioEntity buscarUsuario(Integer id);
 

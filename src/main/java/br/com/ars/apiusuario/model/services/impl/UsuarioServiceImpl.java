@@ -31,105 +31,51 @@ public class UsuarioServiceImpl implements UsuarioService {
 	UsuarioRepository usuarioRepository;
 
 	@Override
-	public UsuarioEntity cadastrarUsuario(UsuarioDTO usuarioDTO) {
+	public void cadastrarUsuario(UsuarioDTO usuarioDTO) {
 
-		try {
+		LOGGER.info("Cadastrando usuario: " + usuarioDTO.toString());
 
-			// TODO
-			isUsuarioExistente(usuarioDTO.getEmail());
+		isUsuarioExistente(usuarioDTO.getEmail());
 
-			// TODO
-			Criptografia criptografia = new Criptografia();
-			String senhaCriptografada = criptografia.criptografarSenha(usuarioDTO.getSenha());
+		UsuarioEntity entidade = obterEntidadeUsuario(usuarioDTO);
+		usuarioRepository.save(entidade);
 
-			UsuarioEntity entidade = obterEntidadeUsuario(usuarioDTO, senhaCriptografada);
-			usuarioRepository.save(entidade);
-			return entidade;
-		} catch (UsuarioPadraoSenhaException u) {
-			LOGGER.info(u.getMessage());
-			throw new UsuarioPadraoSenhaException(u.getMessage());
-		} catch (UsuarioCadastradoException c) {
-			LOGGER.info(c.getMessage());
-			throw new UsuarioCadastradoException(c.getMessage());
-		} catch (Exception e) {
-			String msg = String.format(Constantes.MSG_ERRO_CADASTRAR_USUARIO, usuarioDTO.getEmail());
-			LOGGER.error(msg, e);
-			throw new UsuarioException(msg);
-		}
+		BeanUtils.copyProperties(entidade, usuarioDTO);
+
 	}
 
 	@Override
 	public UsuarioEntity buscarUsuario(Integer id) {
-		Optional<UsuarioEntity> user = usuarioRepository.findById(id);
-		return user.orElseThrow(() -> new UsuarioNotFoundException(Constantes.MSG_USUARIO_NAO_ENCONTRADO + id));
+		return usuarioRepository.findById(id)
+				.orElseThrow(() -> new UsuarioNotFoundException(Constantes.MSG_USUARIO_NAO_ENCONTRADO + id));
 	}
 
 	@Override
 	public void inativarUsuario(Integer id) {
 
-		try {
-			Optional<UsuarioEntity> user = usuarioRepository.findById(id);
+		UsuarioEntity user = usuarioRepository.findById(id).orElseThrow(
+				() -> new UsuarioNotFoundException(String.format(Constantes.MSG_USUARIO_NAO_ENCONTRADO, id)));
 
-			if (!user.isPresent()) {
-				throw new UsuarioNotFoundException(String.format(Constantes.MSG_USUARIO_NAO_ENCONTRADO, id));
-			}
-
-			usuarioRepository.updateStatusUsuario(id, Boolean.FALSE);
-		} catch (UsuarioNotFoundException u) {
-			String msg = String.format(Constantes.MSG_USUARIO_NAO_ENCONTRADO, id);
-			LOGGER.info(msg);
-			throw new UsuarioNotFoundException(u.getMessage());
-		} catch (Exception e) {
-			String msg = String.format(Constantes.MSG_ERRO_INATIVAR_USUARIO, id);
-			LOGGER.error(msg, e);
-			throw new UsuarioException(msg);
-		}
+		usuarioRepository.updateStatusUsuario(user.getId(), Boolean.FALSE);
 	}
 
 	@Override
 	public void ativarUsuario(Integer id) {
 
-		try {
+		UsuarioEntity user = usuarioRepository.findById(id).orElseThrow(
+				() -> new UsuarioNotFoundException(String.format(Constantes.MSG_USUARIO_NAO_ENCONTRADO, id)));
 
-			Optional<UsuarioEntity> user = usuarioRepository.findById(id);
-
-			if (!user.isPresent()) {
-				throw new UsuarioNotFoundException(String.format(Constantes.MSG_USUARIO_NAO_ENCONTRADO, id));
-			}
-
-			usuarioRepository.updateStatusUsuario(id, Boolean.TRUE);
-		} catch (UsuarioNotFoundException u) {
-			String msg = String.format(Constantes.MSG_USUARIO_NAO_ENCONTRADO, id);
-			LOGGER.info(msg);
-			throw new UsuarioNotFoundException(u.getMessage());
-		} catch (Exception e) {
-			String msg = String.format(Constantes.MSG_ERRO_ATIVAR_USUARIO, id);
-			LOGGER.error(msg, e);
-			throw new UsuarioException(msg);
-		}
+		usuarioRepository.updateStatusUsuario(user.getId(), Boolean.TRUE);
 	}
 
 	@Override
 	public void deletarUsuario(Integer id) {
 
-		try {
+		UsuarioEntity user = usuarioRepository.findById(id).orElseThrow(
+				() -> new UsuarioNotFoundException(String.format(Constantes.MSG_USUARIO_NAO_ENCONTRADO, id)));
 
-			Optional<UsuarioEntity> user = usuarioRepository.findById(id);
+		usuarioRepository.delete(user);
 
-			if (!user.isPresent()) {
-				throw new UsuarioNotFoundException(String.format(Constantes.MSG_USUARIO_NAO_ENCONTRADO, id));
-			}
-
-			usuarioRepository.delete(user.get());
-		} catch (UsuarioNotFoundException u) {
-			String msg = String.format(Constantes.MSG_USUARIO_NAO_ENCONTRADO, id);
-			LOGGER.info(msg);
-			throw new UsuarioNotFoundException(u.getMessage());
-		} catch (Exception e) {
-			String msg = String.format(Constantes.MSG_ERRO_DELETE_USUARIO, id);
-			LOGGER.error(msg, e);
-			throw new UsuarioException(msg);
-		}
 	}
 
 	@Override
@@ -144,11 +90,14 @@ public class UsuarioServiceImpl implements UsuarioService {
 	 *            usuarioDTO
 	 * @return UsuarioEntity
 	 */
-	private UsuarioEntity obterEntidadeUsuario(UsuarioDTO usuarioDTO, String senhaCriptografada) {
+	private UsuarioEntity obterEntidadeUsuario(UsuarioDTO usuarioDTO) {
 		UsuarioEntity entidade = new UsuarioEntity();
 		BeanUtils.copyProperties(usuarioDTO, entidade);
 
 		LocalDateTime data = LocalDateTime.now();
+
+		Criptografia criptografia = new Criptografia();
+		String senhaCriptografada = criptografia.criptografarSenha(usuarioDTO.getSenha());
 
 		entidade.setSenha(senhaCriptografada);
 		entidade.setDataCadastro(data);
@@ -165,8 +114,11 @@ public class UsuarioServiceImpl implements UsuarioService {
 	 *            email
 	 */
 	private void isUsuarioExistente(String email) {
-		UsuarioEntity en = usuarioRepository.findUsuarioByEmail(email);
-		if (en != null)
+		Optional<UsuarioEntity> en = usuarioRepository.findUsuarioByEmailIgnoringCase(email);
+
+		if (en.isPresent()) {
 			throw new UsuarioCadastradoException(String.format(Constantes.MSG_VALIDACAO_USUARIO_JA_EXISTENTE, email));
+		}
+
 	}
 }
