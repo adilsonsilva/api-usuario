@@ -18,7 +18,7 @@ public class Constantes {
 	
 	public static final String MSG_ERRO_INATIVAR_USUARIO = "Erro ao inativar usuario %s";
 	
-	public static final String MSG_VALIDACAO_USUARIO_JA_EXISTENTE = "Usuário %s já existente";
+	public static final String MSG_VALIDACAO_USUARIO_JA_EXISTENTE = "Usuário %s já possui cadastro";
 	
 	public static final String MSG_VALIDACAO_PADRAO_SENHA = "Senha fora do padrão. Somente numeros ou letras";
 
