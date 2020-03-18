@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.ars.apiusuario.dto.UsuarioDTO;
-import br.com.ars.apiusuario.model.entitys.UsuarioEntity;
 import br.com.ars.apiusuario.model.services.UsuarioService;
 import br.com.ars.apiusuario.responses.Response;
 import io.swagger.annotations.Api;
@@ -107,13 +106,13 @@ public class UsuarioController {
 
 	@ApiOperation(value = "Buscar usuário por Id")
 	@GetMapping("/{id}")
-	public ResponseEntity<Response<UsuarioEntity>> obterUsuario(
+	public ResponseEntity<Response<UsuarioDTO>> obterUsuario(
 			@ApiParam(value = "Id do usuário") @PathVariable Integer id) {
 		LOGGER.info("Buscando o usuario: " + id);
 
-		Response<UsuarioEntity> response = new Response<>();
+		Response<UsuarioDTO> response = new Response<>();
 
-		UsuarioEntity usuairo = usuarioService.buscarUsuario(id);
+		UsuarioDTO usuairo = usuarioService.buscarUsuario(id);
 
 		response.setData(usuairo);
 		response.setMensagemSucesso("Busca realizada com sucesso");
@@ -122,11 +121,11 @@ public class UsuarioController {
 
 	@ApiOperation(value = "Buscar todos os usuários")
 	@GetMapping
-	public ResponseEntity<Response<List<UsuarioEntity>>> obterUsuarios() {
+	public ResponseEntity<Response<List<UsuarioDTO>>> obterUsuarios() {
 		LOGGER.info("Buscando todos os usuarios");
-		Response<List<UsuarioEntity>> response = new Response<>();
+		Response<List<UsuarioDTO>> response = new Response<>();
 
-		List<UsuarioEntity> usuairos = usuarioService.listarUsuarios();
+		List<UsuarioDTO> usuairos = usuarioService.listarUsuarios();
 		response.setData(usuairos);
 		response.setMensagemSucesso("Busca realizada com sucesso");
 		return new ResponseEntity<>(response, HttpStatus.OK);

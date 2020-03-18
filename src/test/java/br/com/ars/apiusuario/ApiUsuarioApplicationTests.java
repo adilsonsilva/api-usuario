@@ -21,7 +21,6 @@ import br.com.ars.apiusuario.exception.UsuarioCadastradoException;
 import br.com.ars.apiusuario.exception.UsuarioException;
 import br.com.ars.apiusuario.exception.UsuarioNotFoundException;
 import br.com.ars.apiusuario.exception.UsuarioPadraoSenhaException;
-import br.com.ars.apiusuario.model.entitys.UsuarioEntity;
 import br.com.ars.apiusuario.model.services.UsuarioService;
 
 @RunWith(SpringRunner.class)
@@ -134,13 +133,13 @@ public class ApiUsuarioApplicationTests {
 	@Test
 	public void testeUsuario_ativar() {
 
-		UsuarioEntity usuarioInativo = usuarioService.buscarUsuario(Integer.valueOf(4));
+		UsuarioDTO usuarioInativo = usuarioService.buscarUsuario(Integer.valueOf(4));
 
 		boolean status = usuarioInativo.getAtivo();
 
 		usuarioService.ativarUsuario(Integer.valueOf(4));
 
-		UsuarioEntity usuarioPostAtivar = usuarioService.buscarUsuario(Integer.valueOf(4));
+		UsuarioDTO usuarioPostAtivar = usuarioService.buscarUsuario(Integer.valueOf(4));
 
 		assertFalse(status);
 		assertTrue(usuarioPostAtivar.getAtivo());
@@ -148,13 +147,13 @@ public class ApiUsuarioApplicationTests {
 
 	@Test
 	public void testeUsuario_inativar() {
-		UsuarioEntity usuarioAtivo = usuarioService.buscarUsuario(Integer.valueOf(1));
+		UsuarioDTO usuarioAtivo = usuarioService.buscarUsuario(Integer.valueOf(1));
 
 		boolean status = usuarioAtivo.getAtivo();
 
 		usuarioService.inativarUsuario(Integer.valueOf(1));
 
-		UsuarioEntity usuarioPostInativar = usuarioService.buscarUsuario(Integer.valueOf(1));
+		UsuarioDTO usuarioPostInativar = usuarioService.buscarUsuario(Integer.valueOf(1));
 
 		assertTrue(status);
 		assertFalse(usuarioPostInativar.getAtivo());
