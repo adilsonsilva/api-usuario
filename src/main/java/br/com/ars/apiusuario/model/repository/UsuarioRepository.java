@@ -9,16 +9,12 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.ars.apiusuario.model.entitys.UsuarioEntity;
 
 public interface UsuarioRepository extends JpaRepository<UsuarioEntity, Integer> {
-
-	@Query(value = "SELECT u FROM UsuarioEntity u WHERE u.id =:id")
-	UsuarioEntity findUsuarioById(@Param(UsuarioEntity.ID) Integer id);
 	
 	@Transactional
 	@Modifying
 	@Query(value = "UPDATE UsuarioEntity u SET u.ativo =:ativo WHERE u.id =:id")
 	void updateStatusUsuario(@Param(UsuarioEntity.ID) Integer id, @Param(UsuarioEntity.ATIVO) Boolean value);
 	
-	@Query(value="SELECT u FROM UsuarioEntity u WHERE u.email =:email")
-	UsuarioEntity findUsuarioPorEmail(@Param(UsuarioEntity.EMAIL) String email);
+	UsuarioEntity findUsuarioByEmail(String email);
 
 }

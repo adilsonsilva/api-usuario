@@ -19,7 +19,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import br.com.ars.apiusuario.dto.UsuarioDTO;
 import br.com.ars.apiusuario.exception.UsuarioCadastradoException;
-import br.com.ars.apiusuario.exception.UsuarioDeleteException;
+import br.com.ars.apiusuario.exception.UsuarioException;
 import br.com.ars.apiusuario.exception.UsuarioNotFoundException;
 import br.com.ars.apiusuario.exception.UsuarioPadraoSenhaException;
 import br.com.ars.apiusuario.model.entitys.UsuarioEntity;
@@ -76,7 +76,7 @@ public class ApiUsuarioApplicationTests {
 
 		try {
 			usuarioService.deletarUsuario(1);
-		} catch (UsuarioDeleteException e) {
+		} catch (UsuarioException e) {
 			fail();
 		}
 

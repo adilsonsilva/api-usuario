@@ -37,7 +37,7 @@ public class UsuarioEntity implements Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 3179967799946245997L;
 
 	public static final String ID = "id";
 	public static final String NOME = "nome";

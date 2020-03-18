@@ -38,7 +38,7 @@ import io.swagger.annotations.ApiParam;
 @RequestMapping("v1/usuarios")
 public class UsuarioController {
 
-	private Logger logger = LogManager.getLogger(UsuarioController.class);
+	private static final Logger LOGGER = LogManager.getLogger(UsuarioController.class);
 
 	@Autowired
 	UsuarioService usuarioService;
@@ -47,7 +47,7 @@ public class UsuarioController {
 	@PostMapping
 	public ResponseEntity<Response<UsuarioEntity>> cadastrar(@Valid @RequestBody UsuarioDTO usuarioDTO) {
 
-		logger.info("Cadastrando o usuario: " + usuarioDTO.toString());
+		LOGGER.info("Cadastrando o usuario: " + usuarioDTO.toString());
 
 		Response<UsuarioEntity> response = new Response<>();
 
@@ -61,7 +61,7 @@ public class UsuarioController {
 	@ApiOperation(value = "Deletar usuário")
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Response<Boolean>> deletar(@ApiParam(value = "Id do usuário") @PathVariable Integer id) {
-		logger.info(String.format("Inativar usuario %s", id));
+		LOGGER.info(String.format("Inativar usuario %s", id));
 
 		Response<Boolean> response = new Response<>();
 
@@ -81,7 +81,7 @@ public class UsuarioController {
 	@PutMapping("/inativar/{id}")
 	public ResponseEntity<Response<Boolean>> inativarUsuario(
 			@ApiParam(value = "Id do usuário") @PathVariable Integer id) {
-		logger.info(String.format("Inativar usuario %s", id));
+		LOGGER.info(String.format("Inativar usuario %s", id));
 
 		Response<Boolean> response = new Response<>();
 
@@ -95,7 +95,7 @@ public class UsuarioController {
 	@PutMapping("/ativar/{id}")
 	public ResponseEntity<Response<Boolean>> ativarUsuario(
 			@ApiParam(value = "Id do usuário") @PathVariable Integer id) {
-		logger.info(String.format("Ativar usuario %s", id));
+		LOGGER.info(String.format("Ativar usuario %s", id));
 
 		Response<Boolean> response = new Response<>();
 
@@ -109,7 +109,7 @@ public class UsuarioController {
 	@GetMapping("/{id}")
 	public ResponseEntity<Response<UsuarioEntity>> obterUsuario(
 			@ApiParam(value = "Id do usuário") @PathVariable Integer id) {
-		logger.info("Buscando o usuario: " + id);
+		LOGGER.info("Buscando o usuario: " + id);
 
 		Response<UsuarioEntity> response = new Response<>();
 
@@ -123,7 +123,7 @@ public class UsuarioController {
 	@ApiOperation(value = "Buscar todos os usuários")
 	@GetMapping
 	public ResponseEntity<Response<List<UsuarioEntity>>> obterUsuarios() {
-		logger.info("Buscando todos os usuarios");
+		LOGGER.info("Buscando todos os usuarios");
 		Response<List<UsuarioEntity>> response = new Response<>();
 
 		List<UsuarioEntity> usuairos = usuarioService.listarUsuarios();

@@ -14,11 +14,9 @@ import br.com.ars.apiusuario.constantes.Constantes;
 import br.com.ars.apiusuario.controllers.UsuarioController;
 import br.com.ars.apiusuario.dto.UsuarioDTO;
 import br.com.ars.apiusuario.exception.UsuarioCadastradoException;
-import br.com.ars.apiusuario.exception.UsuarioCadastroException;
-import br.com.ars.apiusuario.exception.UsuarioDeleteException;
+import br.com.ars.apiusuario.exception.UsuarioException;
 import br.com.ars.apiusuario.exception.UsuarioNotFoundException;
 import br.com.ars.apiusuario.exception.UsuarioPadraoSenhaException;
-import br.com.ars.apiusuario.exception.UsuarioUpdateException;
 import br.com.ars.apiusuario.model.entitys.UsuarioEntity;
 import br.com.ars.apiusuario.model.repository.UsuarioRepository;
 import br.com.ars.apiusuario.model.services.UsuarioService;
@@ -27,7 +25,7 @@ import br.com.ars.apiusuario.utils.Criptografia;
 @Service
 public class UsuarioServiceImpl implements UsuarioService {
 
-	private Logger logger = LogManager.getLogger(UsuarioController.class);
+	private static final Logger LOGGER = LogManager.getLogger(UsuarioController.class);
 
 	@Autowired
 	UsuarioRepository usuarioRepository;
@@ -48,15 +46,15 @@ public class UsuarioServiceImpl implements UsuarioService {
 			usuarioRepository.save(entidade);
 			return entidade;
 		} catch (UsuarioPadraoSenhaException u) {
-			logger.info(u.getMessage());
+			LOGGER.info(u.getMessage());
 			throw new UsuarioPadraoSenhaException(u.getMessage());
 		} catch (UsuarioCadastradoException c) {
-			logger.info(c.getMessage());
+			LOGGER.info(c.getMessage());
 			throw new UsuarioCadastradoException(c.getMessage());
 		} catch (Exception e) {
 			String msg = String.format(Constantes.MSG_ERRO_CADASTRAR_USUARIO, usuarioDTO.getEmail());
-			logger.error(msg, e);
-			throw new UsuarioCadastroException(msg);
+			LOGGER.error(msg, e);
+			throw new UsuarioException(msg);
 		}
 	}
 
@@ -73,18 +71,18 @@ public class UsuarioServiceImpl implements UsuarioService {
 			Optional<UsuarioEntity> user = usuarioRepository.findById(id);
 
 			if (!user.isPresent()) {
-				throw new UsuarioNotFoundException(Constantes.MSG_USUARIO_NAO_ENCONTRADO + id);
+				throw new UsuarioNotFoundException(String.format(Constantes.MSG_USUARIO_NAO_ENCONTRADO, id));
 			}
 
 			usuarioRepository.updateStatusUsuario(id, Boolean.FALSE);
 		} catch (UsuarioNotFoundException u) {
 			String msg = String.format(Constantes.MSG_USUARIO_NAO_ENCONTRADO, id);
-			logger.info(msg);
+			LOGGER.info(msg);
 			throw new UsuarioNotFoundException(u.getMessage());
 		} catch (Exception e) {
 			String msg = String.format(Constantes.MSG_ERRO_INATIVAR_USUARIO, id);
-			logger.error(msg, e);
-			throw new UsuarioUpdateException(msg);
+			LOGGER.error(msg, e);
+			throw new UsuarioException(msg);
 		}
 	}
 
@@ -96,18 +94,18 @@ public class UsuarioServiceImpl implements UsuarioService {
 			Optional<UsuarioEntity> user = usuarioRepository.findById(id);
 
 			if (!user.isPresent()) {
-				throw new UsuarioNotFoundException(Constantes.MSG_USUARIO_NAO_ENCONTRADO + id);
+				throw new UsuarioNotFoundException(String.format(Constantes.MSG_USUARIO_NAO_ENCONTRADO, id));
 			}
 
 			usuarioRepository.updateStatusUsuario(id, Boolean.TRUE);
 		} catch (UsuarioNotFoundException u) {
 			String msg = String.format(Constantes.MSG_USUARIO_NAO_ENCONTRADO, id);
-			logger.info(msg);
+			LOGGER.info(msg);
 			throw new UsuarioNotFoundException(u.getMessage());
 		} catch (Exception e) {
 			String msg = String.format(Constantes.MSG_ERRO_ATIVAR_USUARIO, id);
-			logger.error(msg, e);
-			throw new UsuarioUpdateException(msg);
+			LOGGER.error(msg, e);
+			throw new UsuarioException(msg);
 		}
 	}
 
@@ -119,18 +117,18 @@ public class UsuarioServiceImpl implements UsuarioService {
 			Optional<UsuarioEntity> user = usuarioRepository.findById(id);
 
 			if (!user.isPresent()) {
-				throw new UsuarioNotFoundException(Constantes.MSG_USUARIO_NAO_ENCONTRADO + id);
+				throw new UsuarioNotFoundException(String.format(Constantes.MSG_USUARIO_NAO_ENCONTRADO, id));
 			}
 
 			usuarioRepository.delete(user.get());
 		} catch (UsuarioNotFoundException u) {
 			String msg = String.format(Constantes.MSG_USUARIO_NAO_ENCONTRADO, id);
-			logger.info(msg);
+			LOGGER.info(msg);
 			throw new UsuarioNotFoundException(u.getMessage());
 		} catch (Exception e) {
 			String msg = String.format(Constantes.MSG_ERRO_DELETE_USUARIO, id);
-			logger.error(msg, e);
-			throw new UsuarioDeleteException(msg);
+			LOGGER.error(msg, e);
+			throw new UsuarioException(msg);
 		}
 	}
 
@@ -167,7 +165,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 	 *            email
 	 */
 	private void isUsuarioExistente(String email) {
-		UsuarioEntity en = usuarioRepository.findUsuarioPorEmail(email);
+		UsuarioEntity en = usuarioRepository.findUsuarioByEmail(email);
 		if (en != null)
 			throw new UsuarioCadastradoException(String.format(Constantes.MSG_VALIDACAO_USUARIO_JA_EXISTENTE, email));
 	}

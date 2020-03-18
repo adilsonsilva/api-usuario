@@ -18,9 +18,14 @@ import br.com.ars.apiusuario.responses.Response;
 @ControllerAdvice
 public class ExceptionHandlerController {
 
+	private static final String LABEL_CAMPO = "Campo: ";
+
+	private static final String LABEL_ERRO = " - Erro: ";
+
 	@ExceptionHandler(InvalidFormatException.class)
 	public ResponseEntity<Response> resourceFormatoInvalido(InvalidFormatException ex) {
-		return new ResponseEntity<Response>(new Response<String>(Constantes.MSG_VALIDACAO_FORMATO), HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<Response>(new Response<String>(Constantes.MSG_VALIDACAO_FORMATO),
+				HttpStatus.BAD_REQUEST);
 	}
 
 	@ExceptionHandler(JsonParseException.class)
@@ -36,7 +41,10 @@ public class ExceptionHandlerController {
 			String fieldName = ((FieldError) error).getField();
 			String errorMessage = error.getDefaultMessage();
 
-			response.getErrors().add("Campo: " + fieldName + " Erro: " + errorMessage);
+			StringBuilder sb = new StringBuilder(LABEL_CAMPO);
+			sb.append(fieldName).append(LABEL_ERRO).append(errorMessage);
+
+			response.getErrors().add(sb.toString());
 		});
 		return new ResponseEntity<Response>(response, HttpStatus.BAD_REQUEST);
 	}

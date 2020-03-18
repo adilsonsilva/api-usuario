@@ -24,7 +24,7 @@ public class UsuarioDTO implements Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -2741772571373954184L;
 
 	@ApiModelProperty(value = "Id da pessoa.", required = false)
 	private Integer id;

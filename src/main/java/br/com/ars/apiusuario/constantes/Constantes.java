@@ -8,7 +8,7 @@ public class Constantes {
 	
 	public static final String MSG_ERRO_CADASTRAR_USUARIO = "Erro ao cadastrar usuario na base %s ";
 	
-	public static final String MSG_USUARIO_NAO_ENCONTRADO = "Usuário não encontrado ";
+	public static final String MSG_USUARIO_NAO_ENCONTRADO = "Usuário não encontrado %s";
 	
 	public static final String MSG_ERRO_DELETE_USUARIO = "Erro ao deletar usuario %s";
 	
