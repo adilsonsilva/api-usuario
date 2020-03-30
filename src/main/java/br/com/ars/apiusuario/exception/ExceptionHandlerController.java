@@ -37,7 +37,7 @@ public class ExceptionHandlerController {
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<Response> handleValidationExceptions(MethodArgumentNotValidException ex) {
 		Response<List<String>> response = new Response<>();
-		ex.getBindingResult().getAllErrors().forEach((error) -> {
+		ex.getBindingResult().getAllErrors().forEach(error -> {
 			String fieldName = ((FieldError) error).getField();
 			String errorMessage = error.getDefaultMessage();
 

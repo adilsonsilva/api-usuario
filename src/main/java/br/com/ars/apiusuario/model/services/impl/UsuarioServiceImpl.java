@@ -6,14 +6,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.ars.apiusuario.constantes.Constantes;
-import br.com.ars.apiusuario.controllers.UsuarioController;
 import br.com.ars.apiusuario.dto.UsuarioDTO;
 import br.com.ars.apiusuario.exception.UsuarioCadastradoException;
 import br.com.ars.apiusuario.exception.UsuarioNotFoundException;
@@ -21,11 +18,11 @@ import br.com.ars.apiusuario.model.entitys.UsuarioEntity;
 import br.com.ars.apiusuario.model.repository.UsuarioRepository;
 import br.com.ars.apiusuario.model.services.UsuarioService;
 import br.com.ars.apiusuario.utils.Criptografia;
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
 @Service
 public class UsuarioServiceImpl implements UsuarioService {
-
-	private static final Logger LOGGER = LogManager.getLogger(UsuarioController.class);
 
 	@Autowired
 	UsuarioRepository usuarioRepository;
@@ -33,7 +30,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 	@Override
 	public void cadastrarUsuario(UsuarioDTO usuarioDTO) {
 
-		LOGGER.info("Cadastrando usuario: " + usuarioDTO.toString());
+		log.info("Cadastrando usuario: " + usuarioDTO.toString());
 
 		isUsuarioExistente(usuarioDTO.getEmail());
 
@@ -46,10 +43,10 @@ public class UsuarioServiceImpl implements UsuarioService {
 
 	@Override
 	public UsuarioDTO buscarUsuario(Integer id) {
-		
+
 		UsuarioEntity user = usuarioRepository.findById(id)
 				.orElseThrow(() -> new UsuarioNotFoundException(Constantes.MSG_USUARIO_NAO_ENCONTRADO + id));
-		
+
 		UsuarioDTO usuarioDTO = new UsuarioDTO();
 		BeanUtils.copyProperties(user, usuarioDTO);
 		return usuarioDTO;

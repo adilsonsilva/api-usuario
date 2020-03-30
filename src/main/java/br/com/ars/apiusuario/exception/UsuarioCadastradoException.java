@@ -14,12 +14,4 @@ public class UsuarioCadastradoException extends RuntimeException {
 	public UsuarioCadastradoException(String mensagem) {
 		super(mensagem);
 	}
-
-	public UsuarioCadastradoException(Throwable erro) {
-		super(erro);
-	}
-
-	public UsuarioCadastradoException(String mensagem, Throwable erro) {
-		super(mensagem, erro);
-	}
 }
