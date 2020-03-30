@@ -42,6 +42,23 @@ public class UsuarioServiceImpl implements UsuarioService {
 	}
 
 	@Override
+	public void alterarUsuario(UsuarioDTO usuarioDTO) {
+
+		log.info("Alterando usuário: " + usuarioDTO.toString());
+
+		Optional<UsuarioEntity> user = usuarioRepository
+				.findUsuarioByEmailIgnoringCaseAndAtivoEquals(usuarioDTO.getEmail(), Boolean.TRUE);
+
+		user.orElseThrow(
+				() -> new UsuarioNotFoundException(Constantes.MSG_USUARIO_NAO_ENCONTRADO + usuarioDTO.getEmail()));
+
+		UsuarioEntity novosDados = popularAlteracao(usuarioDTO);
+
+		usuarioRepository.saveAndFlush(novosDados);
+
+	}
+
+	@Override
 	public UsuarioDTO buscarUsuario(Integer id) {
 
 		UsuarioEntity user = usuarioRepository.findById(id)
@@ -133,5 +150,20 @@ public class UsuarioServiceImpl implements UsuarioService {
 			throw new UsuarioCadastradoException(String.format(Constantes.MSG_VALIDACAO_USUARIO_JA_EXISTENTE, email));
 		}
 
+	}
+
+	/**
+	 * Popula dados alterados
+	 * 
+	 * @param usuarioDTO
+	 *            usuarioDTO
+	 * @return UsuarioEntity
+	 */
+	private UsuarioEntity popularAlteracao(UsuarioDTO usuarioDTO) {
+		UsuarioEntity novosDados = new UsuarioEntity();
+		novosDados.setAtivo(usuarioDTO.getAtivo());
+		novosDados.setNome(usuarioDTO.getNome());
+		novosDados.setSenha(usuarioDTO.getSenha());
+		return novosDados;
 	}
 }

@@ -18,4 +18,6 @@ public interface UsuarioService {
 
 	public List<UsuarioDTO> listarUsuarios();
 
+	public void alterarUsuario(UsuarioDTO usuarioDTO);
+
 }

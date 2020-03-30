@@ -1,5 +1,6 @@
 package br.com.ars.apiusuario;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -99,20 +100,6 @@ public class ApiUsuarioApplicationTests {
 		assertNotNull(usuarioService.listarUsuarios());
 	}
 
-	// @Test
-	// public void testeUsuario_criptografarSenha() {
-	//
-	// UsuarioDTO usuarioDTO2 = new UsuarioDTO();
-	// usuarioDTO2.setAtivo(Boolean.TRUE);
-	// usuarioDTO2.setEmail("teste11@teste.com.br");
-	// usuarioDTO2.setNome("Adilson Silva");
-	// usuarioDTO2.setSenha("123456");
-	//
-	// UsuarioEntity user = usuarioService.cadastrarUsuario(usuarioDTO2);
-	//
-	// assertNotEquals(user.getSenha(), "123456");
-	// }
-
 	@Test
 	public void testeUsuario_criptografarSenha_Nulo() {
 
@@ -167,6 +154,32 @@ public class ApiUsuarioApplicationTests {
 	@Test(expected = UsuarioNotFoundException.class)
 	public void testeUsuario_naoEncontrado_inativar() {
 		usuarioService.ativarUsuario(Integer.valueOf(5));
+	}
+
+	@Test
+	public void testeUsuario_alterarRegistro() {
+
+		try {
+			UsuarioDTO user = usuarioService.buscarUsuario(1);
+			user.setNome("Teste Alterado");
+			usuarioService.alterarUsuario(user);
+		} catch (Exception e) {
+			fail();
+		}
+	}
+
+	@Test(expected = UsuarioNotFoundException.class)
+	public void testeUsuario_alterarRegistro_inativo() {
+		UsuarioDTO user = usuarioService.buscarUsuario(4);
+		user.setNome("Teste Alterado");
+		usuarioService.alterarUsuario(user);
+	}
+
+	@Test(expected = UsuarioNotFoundException.class)
+	public void testeUsuario_alterarRegistro_naoExistente() {
+		UsuarioDTO user = usuarioService.buscarUsuario(10000);
+		user.setNome("Teste Alterado");
+		usuarioService.alterarUsuario(user);
 	}
 
 }
