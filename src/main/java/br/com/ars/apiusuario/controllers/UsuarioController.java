@@ -7,8 +7,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,17 +25,17 @@ import br.com.ars.apiusuario.responses.Response;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.extern.log4j.Log4j2;
 
 /**
  * @author adilson
  *
  */
+@Log4j2
 @Api(value = "API Usuário", description = "API para consumo da entidade usuário")
 @RestController
 @RequestMapping("v1/usuarios")
 public class UsuarioController {
-
-	private static final Logger LOGGER = LogManager.getLogger(UsuarioController.class);
 
 	@Autowired
 	UsuarioService usuarioService;
@@ -46,7 +44,7 @@ public class UsuarioController {
 	@PostMapping
 	public ResponseEntity<Response<UsuarioDTO>> cadastrar(@Valid @RequestBody UsuarioDTO usuarioDTO) {
 
-		LOGGER.info("Cadastrando o usuario: " + usuarioDTO.toString());
+		log.info("Cadastrando o usuario: " + usuarioDTO.toString());
 
 		Response<UsuarioDTO> response = new Response<>();
 
@@ -60,7 +58,7 @@ public class UsuarioController {
 	@ApiOperation(value = "Deletar usuário")
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Response<Boolean>> deletar(@ApiParam(value = "Id do usuário") @PathVariable Integer id) {
-		LOGGER.info(String.format("Inativar usuario %s", id));
+		log.info(String.format("Inativar usuario %s", id));
 
 		Response<Boolean> response = new Response<>();
 
@@ -80,7 +78,7 @@ public class UsuarioController {
 	@PutMapping("/inativar/{id}")
 	public ResponseEntity<Response<Boolean>> inativarUsuario(
 			@ApiParam(value = "Id do usuário") @PathVariable Integer id) {
-		LOGGER.info(String.format("Inativar usuario %s", id));
+		log.info(String.format("Inativar usuario %s", id));
 
 		Response<Boolean> response = new Response<>();
 
@@ -94,7 +92,7 @@ public class UsuarioController {
 	@PutMapping("/ativar/{id}")
 	public ResponseEntity<Response<Boolean>> ativarUsuario(
 			@ApiParam(value = "Id do usuário") @PathVariable Integer id) {
-		LOGGER.info(String.format("Ativar usuario %s", id));
+		log.info(String.format("Ativar usuario %s", id));
 
 		Response<Boolean> response = new Response<>();
 
@@ -108,7 +106,7 @@ public class UsuarioController {
 	@GetMapping("/{id}")
 	public ResponseEntity<Response<UsuarioDTO>> obterUsuario(
 			@ApiParam(value = "Id do usuário") @PathVariable Integer id) {
-		LOGGER.info("Buscando o usuario: " + id);
+		log.info("Buscando o usuario: " + id);
 
 		Response<UsuarioDTO> response = new Response<>();
 
@@ -122,7 +120,7 @@ public class UsuarioController {
 	@ApiOperation(value = "Buscar todos os usuários")
 	@GetMapping
 	public ResponseEntity<Response<List<UsuarioDTO>>> obterUsuarios() {
-		LOGGER.info("Buscando todos os usuarios");
+		log.info("Buscando todos os usuarios");
 		Response<List<UsuarioDTO>> response = new Response<>();
 
 		List<UsuarioDTO> usuairos = usuarioService.listarUsuarios();
